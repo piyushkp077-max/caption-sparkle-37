@@ -74,7 +74,7 @@ function QuotelyApp() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [tab, setTab] = useState<"home" | "saved" | "create">("home");
+  const [tab, setTab] = useState<"home" | "saved" | "create" | "hashtags">("home");
   const [toast, setToast] = useState("");
   const [speakingId, setSpeakingId] = useState<number | "daily" | null>(null);
   const [creatorText, setCreatorText] = useState("अपनी कहानी खुद लिखो — दुनिया को बस पढ़ने दो।");
@@ -176,7 +176,7 @@ function QuotelyApp() {
     lines.forEach((item, index) => context.fillText(item, 540, startY + index * lineHeight));
     context.globalAlpha = 0.78;
     context.font = "500 29px Manrope, sans-serif";
-    context.fillText("KP'S CAPTIONS & QUOTES", 540, 1770);
+    context.fillText("KP'S CAPTIONS, QUOTES & HASHTAGS", 540, 1770);
     const link = document.createElement("a");
     link.download = filename;
     link.href = canvas.toDataURL("image/png");
@@ -190,14 +190,14 @@ function QuotelyApp() {
       return;
     }
     if (navigator.share) {
-      try { await navigator.share({ text: quote.text, title: "KP's Captions & Quotes" }); } catch { return; }
+      try { await navigator.share({ text: quote.text, title: "KP's Captions, Quotes & Hashtags" }); } catch { return; }
     } else {
       await copyText(quote.text);
       notify("Caption copied — paste it in Instagram");
     }
   };
 
-  const setActiveTab = (next: "home" | "saved" | "create") => {
+  const setActiveTab = (next: "home" | "saved" | "create" | "hashtags") => {
     setTab(next);
     if (next === "home") setCategory("All");
     window.scrollTo({ top: 0, behavior: "smooth" });
