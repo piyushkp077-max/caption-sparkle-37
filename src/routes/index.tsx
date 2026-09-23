@@ -297,6 +297,33 @@ function QuotelyApp() {
   );
 }
 
+function Hashtags({ groups, onCopyAll }: { groups: HashtagGroup[]; onCopyAll: (group: HashtagGroup) => void }) {
+  return (
+    <section className="rise">
+      <div className="flex items-end justify-between gap-4">
+        <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Boost your reach</p><h1 className="mt-1 flex items-center gap-2 font-display text-2xl font-medium"><Hash className="size-5 text-primary" />Trending Hashtags</h1></div>
+        <span className="flex items-center gap-1 text-xs font-semibold text-muted-foreground">Live <span className="size-1.5 rounded-full bg-primary" /></span>
+      </div>
+      {groups.length ? <div className="mt-4 grid gap-5 md:grid-cols-2">
+        {groups.map((group, index) => (
+          <article key={group.name} className="rise overflow-hidden rounded-2xl border border-glass-border bg-glass shadow-glass backdrop-blur-xl" style={{ animationDelay: `${Math.min(index, 3) * 70}ms` }}>
+            <div className={cn("flex items-center justify-between gap-3 px-4 py-3 text-story-foreground", group.gradient)}>
+              <div className="min-w-0"><h2 className="truncate font-display text-lg font-medium">{group.name}</h2><p className="truncate text-[11px] opacity-80">{group.tagline}</p></div>
+              <span className="shrink-0 rounded-full bg-story-soft px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]">{group.tags.length} tags</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5 p-4">
+              {group.tags.map((tag) => <span key={tag} className="rounded-full border border-glass-border bg-background/60 px-2.5 py-1 text-xs font-medium text-muted-foreground">{tag}</span>)}
+            </div>
+            <div className="px-4 pb-4">
+              <Button variant="ink" className="w-full rounded-xl" onClick={() => onCopyAll(group)}><Copy /> Copy All Hashtags</Button>
+            </div>
+          </article>
+        ))}
+      </div> : <div className="mt-12 text-center"><Sparkles className="mx-auto size-8 text-primary" /><h2 className="mt-3 font-display text-xl">No hashtags found</h2><p className="mt-1 text-sm text-muted-foreground">Try another keyword.</p></div>}
+    </section>
+  );
+}
+
 function QuoteCard({ quote, favorite, speaking, delay, onCopy, onFavorite, onListen, onDownload, onShare }: { quote: Quote; favorite: boolean; speaking: boolean; delay: number; onCopy: () => void; onFavorite: () => void; onListen: () => void; onDownload: () => void; onShare: (channel: "whatsapp" | "instagram") => void }) {
   return <article className="rise" style={{ animationDelay: `${delay * 70}ms` }}>
     <div className={cn("relative min-h-52 overflow-hidden rounded-2xl p-5 text-story-foreground shadow-elevated", quote.gradient)}>
