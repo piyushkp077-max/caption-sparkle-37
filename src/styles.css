@@ -209,3 +209,7 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Split brand logo: YouTube red + Instagram gradient */
+.logo-yt { background: #ff0033; }
+.logo-ig { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5 100%); }

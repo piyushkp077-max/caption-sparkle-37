@@ -5,6 +5,7 @@ import {
   Copy,
   Download,
   Flame,
+  Hash,
   Heart,
   Home,
   Instagram,
@@ -45,6 +46,19 @@ const quotes: Quote[] = [
   { id: 8, text: "Single, peaceful, and no longer explaining my worth.", translation: "अकेला हूँ, सुकून में हूँ, और अब अपनी कीमत नहीं समझाता।", category: "Single/Breakup", views: "455K", gradient: "quote-gradient-three" },
 ];
 
+type HashtagGroup = { name: string; tagline: string; gradient: string; tags: string[] };
+
+const hashtagGroups: HashtagGroup[] = [
+  { name: "Viral & Trending", tagline: "For posts that need maximum reach right now", gradient: "quote-gradient-one", tags: ["#viral", "#trending", "#explore", "#explorepage", "#fyp", "#foryou", "#foryoupage", "#instagood", "#instadaily", "#viralpost", "#trendingnow", "#reelsinstagram", "#reelitfeelit", "#instareels", "#love", "#photooftheday"] },
+  { name: "Attitude", tagline: "Bold captions deserve bold tags", gradient: "quote-gradient-three", tags: ["#attitude", "#attitudestatus", "#badshah", "#king", "#boss", "#bosslife", "#swag", "#desi", "#royal", "#selfmade", "#nofilter", "#darrnahi", "#attitudequotes", "#single", "#style", "#confidence"] },
+  { name: "Love & Romantic", tagline: "Couple posts, crushes and soft moments", gradient: "quote-gradient-five", tags: ["#love", "#lovestory", "#romantic", "#couplegoals", "#couples", "#pyar", "#mohabbat", "#ishq", "#dil", "#truelove", "#lovequotes", "#forever", "#soulmate", "#romance", "#together", "#heartbeat"] },
+  { name: "Motivation", tagline: "Hustle, grind and never-give-up energy", gradient: "quote-gradient-two", tags: ["#motivation", "#motivationalquotes", "#hustle", "#grind", "#success", "#nevergiveup", "#dreambig", "#focus", "#hardwork", "#inspiration", "#mindset", "#goals", "#selfbelief", "#positivity", "#discipline", "#winner"] },
+  { name: "Sad & Alone", tagline: "For the quiet, heavy days", gradient: "quote-gradient-four", tags: ["#sad", "#sadquotes", "#alone", "#broken", "#heartbroken", "#pain", "#tears", "#lonely", "#missyou", "#sadshayari", "#feelings", "#hurt", "#depressed", "#goodbye", "#silent", "#lost"] },
+  { name: "Reels/Shorts Special", tagline: "Built for Reels, Shorts and quick viral hits", gradient: "quote-gradient-one", tags: ["#reels", "#reelsinstagram", "#reelsvideo", "#reelitfeelit", "#reelsindia", "#shorts", "#youtubeshorts", "#reelkarofeelkaro", "#viralreels", "#trendingreels", "#reelsofinstagram", "#reelsdaily", "#explorepage", "#viralvideo", "#instavideo", "#contentcreator"] },
+  { name: "Life Reality", tagline: "Real talk about zindagi and truth", gradient: "quote-gradient-two", tags: ["#life", "#zindagi", "#reality", "#truth", "#lifequotes", "#factsoflife", "#deep", "#thoughts", "#lifelessons", "#realtalk", "#waqt", "#kismat", "#lifeislife", "#wisdom", "#experience", "#sach"] },
+  { name: "Friendship", tagline: "Dosti, yaari and squad love", gradient: "quote-gradient-four", tags: ["#friends", "#friendship", "#dosti", "#yaari", "#bff", "#bestfriends", "#squad", "#friendshipgoals", "#yaar", "#dost", "#friendsforever", "#brotherhood", "#masti", "#gang", "#memories", "#foreverfriends"] },
+];
+
 const creatorBackgrounds = [
   { name: "Aurora", colors: ["#6366f1", "#ec4899"], className: "quote-gradient-one" },
   { name: "Ocean", colors: ["#0ea5e9", "#4f46e5"], className: "quote-gradient-two" },
@@ -57,9 +71,9 @@ const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? cre
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KP's Captions & Quotes" },
-      { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards." },
-      { property: "og:title", content: "KP's Captions & Quotes" },
+      { title: "KP's Captions, Quotes & Hashtags" },
+      { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards — plus viral hashtag bundles." },
+      { property: "og:title", content: "KP's Captions, Quotes & Hashtags" },
       { property: "og:description", content: "Discover viral captions and create downloadable Instagram story quote cards." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -73,7 +87,7 @@ function QuotelyApp() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [tab, setTab] = useState<"home" | "saved" | "create">("home");
+  const [tab, setTab] = useState<"home" | "saved" | "create" | "hashtags">("home");
   const [toast, setToast] = useState("");
   const [speakingId, setSpeakingId] = useState<number | "daily" | null>(null);
   const [creatorText, setCreatorText] = useState("अपनी कहानी खुद लिखो — दुनिया को बस पढ़ने दो।");
@@ -117,6 +131,17 @@ function QuotelyApp() {
     await navigator.clipboard.writeText(text);
     notify("Copied clean text");
   };
+
+  const copyAllHashtags = async (group: HashtagGroup) => {
+    await navigator.clipboard.writeText(group.tags.join(" "));
+    notify(`Copied all ${group.tags.length} hashtags`);
+  };
+
+  const visibleHashtagGroups = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return hashtagGroups;
+    return hashtagGroups.filter((group) => `${group.name} ${group.tags.join(" ")}`.toLowerCase().includes(normalized));
+  }, [query]);
 
   const toggleFavorite = (id: number) => {
     setFavorites((current) => {
@@ -175,7 +200,7 @@ function QuotelyApp() {
     lines.forEach((item, index) => context.fillText(item, 540, startY + index * lineHeight));
     context.globalAlpha = 0.78;
     context.font = "500 29px Manrope, sans-serif";
-    context.fillText("KP'S CAPTIONS & QUOTES", 540, 1770);
+    context.fillText("KP'S CAPTIONS, QUOTES & HASHTAGS", 540, 1770);
     const link = document.createElement("a");
     link.download = filename;
     link.href = canvas.toDataURL("image/png");
@@ -189,14 +214,14 @@ function QuotelyApp() {
       return;
     }
     if (navigator.share) {
-      try { await navigator.share({ text: quote.text, title: "KP's Captions & Quotes" }); } catch { return; }
+      try { await navigator.share({ text: quote.text, title: "KP's Captions, Quotes & Hashtags" }); } catch { return; }
     } else {
       await copyText(quote.text);
       notify("Caption copied — paste it in Instagram");
     }
   };
 
-  const setActiveTab = (next: "home" | "saved" | "create") => {
+  const setActiveTab = (next: "home" | "saved" | "create" | "hashtags") => {
     setTab(next);
     if (next === "home") setCategory("All");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -208,8 +233,11 @@ function QuotelyApp() {
         <div className="mx-auto max-w-5xl px-4 pb-3 pt-3">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-foreground font-display text-lg text-background">KP</span>
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[15px] font-medium leading-tight">KP's Captions & Quotes</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
+              <span className="relative grid size-9 shrink-0 overflow-hidden rounded-xl shadow-glass" aria-hidden="true">
+                <span className="logo-yt absolute inset-y-0 left-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">K</span>
+                <span className="logo-ig absolute inset-y-0 right-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">P</span>
+              </span>
+              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
@@ -220,14 +248,16 @@ function QuotelyApp() {
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/70" placeholder="Search captions, mood, keyword…" aria-label="Search quotes" />
           </label>
-          {tab !== "create" && <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+          {(tab === "home" || tab === "saved") && <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
             {categories.map((item) => <Button key={item} variant={category === item ? "ink" : "glass"} size="pill" className="shrink-0" onClick={() => setCategory(item)}>{item}</Button>)}
           </div>}
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
-        {tab === "create" ? (
+        {tab === "hashtags" ? (
+          <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
+        ) : tab === "create" ? (
           <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-kp-story.png", creatorFont)} />
         ) : (
           <>
@@ -255,14 +285,42 @@ function QuotelyApp() {
 
       {tab !== "create" && <Button variant="ink" className="fixed bottom-23 right-4 z-40 h-12 rounded-full px-4 shadow-elevated md:right-[max(1rem,calc((100vw-64rem)/2))]" onClick={() => setActiveTab("create")}><Plus /> Create</Button>}
       <nav className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4" aria-label="Main navigation">
-        <div className="mx-auto grid max-w-md grid-cols-3 rounded-2xl border border-glass-border bg-glass px-2 py-2 shadow-elevated backdrop-blur-xl">
+        <div className="mx-auto grid max-w-md grid-cols-4 rounded-2xl border border-glass-border bg-glass px-2 py-2 shadow-elevated backdrop-blur-xl">
           <TabButton active={tab === "home"} label="Home" icon={<Home />} onClick={() => setActiveTab("home")} />
+          <TabButton active={tab === "hashtags"} label="Hashtags" icon={<Hash />} onClick={() => setActiveTab("hashtags")} />
           <TabButton active={tab === "saved"} label="Saved" icon={<Heart />} onClick={() => setActiveTab("saved")} />
           <TabButton active={tab === "create"} label="Create" icon={<WandSparkles />} onClick={() => setActiveTab("create")} />
         </div>
       </nav>
       {toast && <div role="status" className="toast-in fixed bottom-24 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-background shadow-elevated"><Check className="size-3.5" />{toast}</div>}
     </div>
+  );
+}
+
+function Hashtags({ groups, onCopyAll }: { groups: HashtagGroup[]; onCopyAll: (group: HashtagGroup) => void }) {
+  return (
+    <section className="rise">
+      <div className="flex items-end justify-between gap-4">
+        <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Boost your reach</p><h1 className="mt-1 flex items-center gap-2 font-display text-2xl font-medium"><Hash className="size-5 text-primary" />Trending Hashtags</h1></div>
+        <span className="flex items-center gap-1 text-xs font-semibold text-muted-foreground">Live <span className="size-1.5 rounded-full bg-primary" /></span>
+      </div>
+      {groups.length ? <div className="mt-4 grid gap-5 md:grid-cols-2">
+        {groups.map((group, index) => (
+          <article key={group.name} className="rise overflow-hidden rounded-2xl border border-glass-border bg-glass shadow-glass backdrop-blur-xl" style={{ animationDelay: `${Math.min(index, 3) * 70}ms` }}>
+            <div className={cn("flex items-center justify-between gap-3 px-4 py-3 text-story-foreground", group.gradient)}>
+              <div className="min-w-0"><h2 className="truncate font-display text-lg font-medium">{group.name}</h2><p className="truncate text-[11px] opacity-80">{group.tagline}</p></div>
+              <span className="shrink-0 rounded-full bg-story-soft px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]">{group.tags.length} tags</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5 p-4">
+              {group.tags.map((tag) => <span key={tag} className="rounded-full border border-glass-border bg-background/60 px-2.5 py-1 text-xs font-medium text-muted-foreground">{tag}</span>)}
+            </div>
+            <div className="px-4 pb-4">
+              <Button variant="ink" className="w-full rounded-xl" onClick={() => onCopyAll(group)}><Copy /> Copy All Hashtags</Button>
+            </div>
+          </article>
+        ))}
+      </div> : <div className="mt-12 text-center"><Sparkles className="mx-auto size-8 text-primary" /><h2 className="mt-3 font-display text-xl">No hashtags found</h2><p className="mt-1 text-sm text-muted-foreground">Try another keyword.</p></div>}
+    </section>
   );
 }
 
