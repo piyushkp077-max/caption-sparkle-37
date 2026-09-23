@@ -46,11 +46,13 @@ const quotes: Quote[] = [
 ];
 
 const creatorBackgrounds = [
-  { name: "Aurora", colors: ["#6366f1", "#ec4899"] },
-  { name: "Ocean", colors: ["#0ea5e9", "#4f46e5"] },
-  { name: "Meadow", colors: ["#10b981", "#0ea5e9"] },
-  { name: "Sunset", colors: ["#f43f5e", "#a855f7"] },
+  { name: "Aurora", colors: ["#6366f1", "#ec4899"], className: "quote-gradient-one" },
+  { name: "Ocean", colors: ["#0ea5e9", "#4f46e5"], className: "quote-gradient-two" },
+  { name: "Meadow", colors: ["#10b981", "#0ea5e9"], className: "quote-gradient-four" },
+  { name: "Sunset", colors: ["#f43f5e", "#a855f7"], className: "quote-gradient-three" },
 ];
+
+const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? creatorBackgrounds[0];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -149,8 +151,8 @@ function QuotelyApp() {
     const context = canvas.getContext("2d");
     if (!context) return;
     const gradient = context.createLinearGradient(0, 0, 1080, 1920);
-    gradient.addColorStop(0, colors[0]);
-    gradient.addColorStop(1, colors[1]);
+    gradient.addColorStop(0, colors[0] ?? "#6366f1");
+    gradient.addColorStop(1, colors[1] ?? "#ec4899");
     context.fillStyle = gradient;
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = "rgba(255,255,255,.12)";
@@ -226,7 +228,7 @@ function QuotelyApp() {
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
         {tab === "create" ? (
-          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, creatorBackgrounds[creatorBg].colors, "my-quotely-story.png", creatorFont)} />
+          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-quotely-story.png", creatorFont)} />
         ) : (
           <>
             {tab === "home" && <section className="rise relative overflow-hidden rounded-2xl quote-gradient-one p-5 text-story-foreground shadow-elevated">
@@ -244,7 +246,7 @@ function QuotelyApp() {
                 {tab === "home" && <span className="flex items-center gap-1 text-xs font-semibold text-muted-foreground">Live <span className="size-1.5 rounded-full bg-primary" /></span>}
               </div>
               {visibleQuotes.length ? <div className="mt-4 grid gap-6 md:grid-cols-2">
-                {visibleQuotes.map((quote, index) => <QuoteCard key={quote.id} quote={quote} favorite={favorites.includes(quote.id)} speaking={speakingId === quote.id} delay={Math.min(index, 3)} onCopy={() => copyText(quote.text)} onFavorite={() => toggleFavorite(quote.id)} onListen={() => listen(quote.id, quote.text)} onDownload={() => downloadStory(quote.text, creatorBackgrounds[quote.id % creatorBackgrounds.length].colors, `quotely-${quote.id}.png`)} onShare={(channel) => share(quote, channel)} />)}
+                {visibleQuotes.map((quote, index) => <QuoteCard key={quote.id} quote={quote} favorite={favorites.includes(quote.id)} speaking={speakingId === quote.id} delay={Math.min(index, 3)} onCopy={() => copyText(quote.text)} onFavorite={() => toggleFavorite(quote.id)} onListen={() => listen(quote.id, quote.text)} onDownload={() => downloadStory(quote.text, getCreatorBackground(quote.id % creatorBackgrounds.length)?.colors ?? [], `quotely-${quote.id}.png`)} onShare={(channel) => share(quote, channel)} />)}
               </div> : <div className="mt-12 text-center"><Sparkles className="mx-auto size-8 text-primary" /><h2 className="mt-3 font-display text-xl">No captions found</h2><p className="mt-1 text-sm text-muted-foreground">Try another keyword or category.</p></div>}
             </section>
           </>
@@ -283,11 +285,11 @@ function QuoteCard({ quote, favorite, speaking, delay, onCopy, onFavorite, onLis
 function Creator({ text, setText, font, setFont, background, setBackground, onDownload }: { text: string; setText: (value: string) => void; font: string; setFont: (value: string) => void; background: number; setBackground: (value: number) => void; onDownload: () => void }) {
   return <section className="rise mx-auto max-w-2xl">
     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Your words, your style</p><h1 className="mt-1 font-display text-3xl font-medium">Quote Creator</h1>
-    <div className={cn("mt-5 flex aspect-[9/12] max-h-[480px] items-center justify-center rounded-2xl p-8 text-center text-story-foreground shadow-elevated", ["quote-gradient-one", "quote-gradient-two", "quote-gradient-four", "quote-gradient-three"][background])}><p className={cn("max-w-md text-[clamp(1.5rem,7vw,2.5rem)] font-semibold leading-tight", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text || "Your quote will appear here."}”</p></div>
+    <div className={cn("mt-5 flex aspect-[9/12] max-h-[480px] items-center justify-center rounded-2xl p-8 text-center text-story-foreground shadow-elevated", getCreatorBackground(background)?.className)}><p className={cn("max-w-md text-[clamp(1.5rem,7vw,2.5rem)] font-semibold leading-tight", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text || "Your quote will appear here."}”</p></div>
     <div className="mt-5 space-y-5 rounded-2xl border border-glass-border bg-glass p-4 shadow-glass backdrop-blur-xl">
       <label className="block"><span className="text-xs font-semibold text-muted-foreground">Your caption</span><textarea value={text} maxLength={180} onChange={(event) => setText(event.target.value)} rows={3} className="mt-2 w-full resize-none rounded-xl border border-input bg-background/70 p-3 text-sm outline-none ring-primary transition focus:ring-2" placeholder="Write something unforgettable…" /><span className="mt-1 block text-right text-[10px] text-muted-foreground">{text.length}/180</span></label>
       <div><span className="text-xs font-semibold text-muted-foreground">Font</span><div className="mt-2 grid grid-cols-3 gap-2">{["Fraunces", "Manrope", "Tiro Devanagari Hindi"].map((item) => <Button key={item} variant={font === item ? "ink" : "outline"} size="sm" className={cn("min-w-0 px-2", item === "Tiro Devanagari Hindi" && "font-hindi")} onClick={() => setFont(item)}>{item === "Tiro Devanagari Hindi" ? "हिंदी" : item}</Button>)}</div></div>
-      <div><span className="text-xs font-semibold text-muted-foreground">Background</span><div className="mt-2 flex gap-3">{creatorBackgrounds.map((item, index) => <button key={item.name} aria-label={`${item.name} background`} title={item.name} onClick={() => setBackground(index)} className={cn("size-9 rounded-full border-2 ring-offset-2 ring-offset-background transition", background === index ? "border-foreground ring-2 ring-primary" : "border-background")} style={{ background: `linear-gradient(135deg, ${item.colors[0]}, ${item.colors[1]})` }} />)}</div></div>
+      <div><span className="text-xs font-semibold text-muted-foreground">Background</span><div className="mt-2 flex gap-3">{creatorBackgrounds.map((item, index) => <button key={item.name} aria-label={`${item.name} background`} title={item.name} onClick={() => setBackground(index)} className={cn("size-9 rounded-full border-2 ring-offset-2 ring-offset-background transition", item.className, background === index ? "border-foreground ring-2 ring-primary" : "border-background")} />)}</div></div>
       <Button variant="ink" size="lg" className="w-full rounded-xl" disabled={!text.trim()} onClick={onDownload}><Download /> Download Story Image</Button>
     </div>
   </section>;
