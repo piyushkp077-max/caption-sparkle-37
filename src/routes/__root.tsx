@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Quotely — Trending Captions & Quotes" },
+      { title: "KP's Captions & Quotes" },
       { name: "description", content: "Discover, save, share, listen to, and design trending Hindi and English captions." },
-      { name: "author", content: "Quotely" },
-      { property: "og:title", content: "Quotely — Trending Captions & Quotes" },
+      { name: "author", content: "KP's Captions & Quotes" },
+      { property: "og:title", content: "KP's Captions & Quotes" },
       { property: "og:description", content: "Trending Hindi and English captions, shareable quote cards, and a custom quote creator." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
