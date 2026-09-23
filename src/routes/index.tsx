@@ -57,9 +57,9 @@ const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? cre
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Quotely — Trending Hindi & English Captions" },
+      { title: "KP's Captions & Quotes" },
       { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards." },
-      { property: "og:title", content: "Quotely — Trending Hindi & English Captions" },
+      { property: "og:title", content: "KP's Captions & Quotes" },
       { property: "og:description", content: "Discover viral captions and create downloadable Instagram story quote cards." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -144,7 +144,7 @@ function QuotelyApp() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const downloadStory = (text: string, colors: string[], filename = "quotely-story.png", font = "Fraunces") => {
+  const downloadStory = (text: string, colors: string[], filename = "kp-story.png", font = "Fraunces") => {
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1920;
@@ -175,7 +175,7 @@ function QuotelyApp() {
     lines.forEach((item, index) => context.fillText(item, 540, startY + index * lineHeight));
     context.globalAlpha = 0.78;
     context.font = "500 29px Manrope, sans-serif";
-    context.fillText("QUOTELY  •  CAPTION STUDIO", 540, 1770);
+    context.fillText("KP'S CAPTIONS & QUOTES", 540, 1770);
     const link = document.createElement("a");
     link.download = filename;
     link.href = canvas.toDataURL("image/png");
@@ -189,7 +189,7 @@ function QuotelyApp() {
       return;
     }
     if (navigator.share) {
-      try { await navigator.share({ text: quote.text, title: "Quotely caption" }); } catch { return; }
+      try { await navigator.share({ text: quote.text, title: "KP's Captions & Quotes" }); } catch { return; }
     } else {
       await copyText(quote.text);
       notify("Caption copied — paste it in Instagram");
@@ -208,8 +208,8 @@ function QuotelyApp() {
         <div className="mx-auto max-w-5xl px-4 pb-3 pt-3">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-foreground font-display text-lg text-background">Q</span>
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[17px] font-medium">Quotely</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-foreground font-display text-lg text-background">KP</span>
+              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[15px] font-medium leading-tight">KP's Captions & Quotes</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
@@ -228,7 +228,7 @@ function QuotelyApp() {
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
         {tab === "create" ? (
-          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-quotely-story.png", creatorFont)} />
+          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-kp-story.png", creatorFont)} />
         ) : (
           <>
             {tab === "home" && <section className="rise relative overflow-hidden rounded-2xl quote-gradient-one p-5 text-story-foreground shadow-elevated">
@@ -246,7 +246,7 @@ function QuotelyApp() {
                 {tab === "home" && <span className="flex items-center gap-1 text-xs font-semibold text-muted-foreground">Live <span className="size-1.5 rounded-full bg-primary" /></span>}
               </div>
               {visibleQuotes.length ? <div className="mt-4 grid gap-6 md:grid-cols-2">
-                {visibleQuotes.map((quote, index) => <QuoteCard key={quote.id} quote={quote} favorite={favorites.includes(quote.id)} speaking={speakingId === quote.id} delay={Math.min(index, 3)} onCopy={() => copyText(quote.text)} onFavorite={() => toggleFavorite(quote.id)} onListen={() => listen(quote.id, quote.text)} onDownload={() => downloadStory(quote.text, getCreatorBackground(quote.id % creatorBackgrounds.length)?.colors ?? [], `quotely-${quote.id}.png`)} onShare={(channel) => share(quote, channel)} />)}
+                {visibleQuotes.map((quote, index) => <QuoteCard key={quote.id} quote={quote} favorite={favorites.includes(quote.id)} speaking={speakingId === quote.id} delay={Math.min(index, 3)} onCopy={() => copyText(quote.text)} onFavorite={() => toggleFavorite(quote.id)} onListen={() => listen(quote.id, quote.text)} onDownload={() => downloadStory(quote.text, getCreatorBackground(quote.id % creatorBackgrounds.length)?.colors ?? [], `kp-quote-${quote.id}.png`)} onShare={(channel) => share(quote, channel)} />)}
               </div> : <div className="mt-12 text-center"><Sparkles className="mx-auto size-8 text-primary" /><h2 className="mt-3 font-display text-xl">No captions found</h2><p className="mt-1 text-sm text-muted-foreground">Try another keyword or category.</p></div>}
             </section>
           </>
