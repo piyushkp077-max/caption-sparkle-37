@@ -5,6 +5,7 @@ import {
   Copy,
   Download,
   Flame,
+  Hash,
   Heart,
   Home,
   Instagram,
@@ -57,9 +58,9 @@ const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? cre
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KP's Captions & Quotes" },
-      { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards." },
-      { property: "og:title", content: "KP's Captions & Quotes" },
+      { title: "KP's Captions, Quotes & Hashtags" },
+      { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards — plus viral hashtag bundles." },
+      { property: "og:title", content: "KP's Captions, Quotes & Hashtags" },
       { property: "og:description", content: "Discover viral captions and create downloadable Instagram story quote cards." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
