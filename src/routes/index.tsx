@@ -237,7 +237,7 @@ function QuotelyApp() {
                 <span className="logo-yt absolute inset-y-0 left-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">K</span>
                 <span className="logo-ig absolute inset-y-0 right-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">P</span>
               </span>
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[15px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
+              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
