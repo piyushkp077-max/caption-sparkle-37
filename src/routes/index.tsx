@@ -46,6 +46,19 @@ const quotes: Quote[] = [
   { id: 8, text: "Single, peaceful, and no longer explaining my worth.", translation: "अकेला हूँ, सुकून में हूँ, और अब अपनी कीमत नहीं समझाता।", category: "Single/Breakup", views: "455K", gradient: "quote-gradient-three" },
 ];
 
+type HashtagGroup = { name: string; tagline: string; gradient: string; tags: string[] };
+
+const hashtagGroups: HashtagGroup[] = [
+  { name: "Viral & Trending", tagline: "For posts that need maximum reach right now", gradient: "quote-gradient-one", tags: ["#viral", "#trending", "#explore", "#explorepage", "#fyp", "#foryou", "#foryoupage", "#instagood", "#instadaily", "#viralpost", "#trendingnow", "#reelsinstagram", "#reelitfeelit", "#instareels", "#love", "#photooftheday"] },
+  { name: "Attitude", tagline: "Bold captions deserve bold tags", gradient: "quote-gradient-three", tags: ["#attitude", "#attitudestatus", "#badshah", "#king", "#boss", "#bosslife", "#swag", "#desi", "#royal", "#selfmade", "#nofilter", "#darrnahi", "#attitudequotes", "#single", "#style", "#confidence"] },
+  { name: "Love & Romantic", tagline: "Couple posts, crushes and soft moments", gradient: "quote-gradient-five", tags: ["#love", "#lovestory", "#romantic", "#couplegoals", "#couples", "#pyar", "#mohabbat", "#ishq", "#dil", "#truelove", "#lovequotes", "#forever", "#soulmate", "#romance", "#together", "#heartbeat"] },
+  { name: "Motivation", tagline: "Hustle, grind and never-give-up energy", gradient: "quote-gradient-two", tags: ["#motivation", "#motivationalquotes", "#hustle", "#grind", "#success", "#nevergiveup", "#dreambig", "#focus", "#hardwork", "#inspiration", "#mindset", "#goals", "#selfbelief", "#positivity", "#discipline", "#winner"] },
+  { name: "Sad & Alone", tagline: "For the quiet, heavy days", gradient: "quote-gradient-four", tags: ["#sad", "#sadquotes", "#alone", "#broken", "#heartbroken", "#pain", "#tears", "#lonely", "#missyou", "#sadshayari", "#feelings", "#hurt", "#depressed", "#goodbye", "#silent", "#lost"] },
+  { name: "Reels/Shorts Special", tagline: "Built for Reels, Shorts and quick viral hits", gradient: "quote-gradient-one", tags: ["#reels", "#reelsinstagram", "#reelsvideo", "#reelitfeelit", "#reelsindia", "#shorts", "#youtubeshorts", "#reelkarofeelkaro", "#viralreels", "#trendingreels", "#reelsofinstagram", "#reelsdaily", "#explorepage", "#viralvideo", "#instavideo", "#contentcreator"] },
+  { name: "Life Reality", tagline: "Real talk about zindagi and truth", gradient: "quote-gradient-two", tags: ["#life", "#zindagi", "#reality", "#truth", "#lifequotes", "#factsoflife", "#deep", "#thoughts", "#lifelessons", "#realtalk", "#waqt", "#kismat", "#lifeislife", "#wisdom", "#experience", "#sach"] },
+  { name: "Friendship", tagline: "Dosti, yaari and squad love", gradient: "quote-gradient-four", tags: ["#friends", "#friendship", "#dosti", "#yaari", "#bff", "#bestfriends", "#squad", "#friendshipgoals", "#yaar", "#dost", "#friendsforever", "#brotherhood", "#masti", "#gang", "#memories", "#foreverfriends"] },
+];
+
 const creatorBackgrounds = [
   { name: "Aurora", colors: ["#6366f1", "#ec4899"], className: "quote-gradient-one" },
   { name: "Ocean", colors: ["#0ea5e9", "#4f46e5"], className: "quote-gradient-two" },
@@ -209,8 +222,11 @@ function QuotelyApp() {
         <div className="mx-auto max-w-5xl px-4 pb-3 pt-3">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-foreground font-display text-lg text-background">KP</span>
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[15px] font-medium leading-tight">KP's Captions & Quotes</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
+              <span className="relative grid size-9 shrink-0 overflow-hidden rounded-xl shadow-glass" aria-hidden="true">
+                <span className="logo-yt absolute inset-y-0 left-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">K</span>
+                <span className="logo-ig absolute inset-y-0 right-0 grid w-1/2 place-items-center font-display text-sm font-semibold text-story-foreground">P</span>
+              </span>
+              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[15px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
