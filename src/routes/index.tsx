@@ -255,7 +255,9 @@ function QuotelyApp() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
-        {tab === "create" ? (
+        {tab === "hashtags" ? (
+          <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
+        ) : tab === "create" ? (
           <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-kp-story.png", creatorFont)} />
         ) : (
           <>
@@ -283,8 +285,9 @@ function QuotelyApp() {
 
       {tab !== "create" && <Button variant="ink" className="fixed bottom-23 right-4 z-40 h-12 rounded-full px-4 shadow-elevated md:right-[max(1rem,calc((100vw-64rem)/2))]" onClick={() => setActiveTab("create")}><Plus /> Create</Button>}
       <nav className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4" aria-label="Main navigation">
-        <div className="mx-auto grid max-w-md grid-cols-3 rounded-2xl border border-glass-border bg-glass px-2 py-2 shadow-elevated backdrop-blur-xl">
+        <div className="mx-auto grid max-w-md grid-cols-4 rounded-2xl border border-glass-border bg-glass px-2 py-2 shadow-elevated backdrop-blur-xl">
           <TabButton active={tab === "home"} label="Home" icon={<Home />} onClick={() => setActiveTab("home")} />
+          <TabButton active={tab === "hashtags"} label="Hashtags" icon={<Hash />} onClick={() => setActiveTab("hashtags")} />
           <TabButton active={tab === "saved"} label="Saved" icon={<Heart />} onClick={() => setActiveTab("saved")} />
           <TabButton active={tab === "create"} label="Create" icon={<WandSparkles />} onClick={() => setActiveTab("create")} />
         </div>
