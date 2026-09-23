@@ -132,6 +132,17 @@ function QuotelyApp() {
     notify("Copied clean text");
   };
 
+  const copyAllHashtags = async (group: HashtagGroup) => {
+    await navigator.clipboard.writeText(group.tags.join(" "));
+    notify(`Copied all ${group.tags.length} hashtags`);
+  };
+
+  const visibleHashtagGroups = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return hashtagGroups;
+    return hashtagGroups.filter((group) => `${group.name} ${group.tags.join(" ")}`.toLowerCase().includes(normalized));
+  }, [query]);
+
   const toggleFavorite = (id: number) => {
     setFavorites((current) => {
       const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
@@ -237,7 +248,7 @@ function QuotelyApp() {
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/70" placeholder="Search captions, mood, keyword…" aria-label="Search quotes" />
           </label>
-          {tab !== "create" && <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
+          {(tab === "home" || tab === "saved") && <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
             {categories.map((item) => <Button key={item} variant={category === item ? "ink" : "glass"} size="pill" className="shrink-0" onClick={() => setCategory(item)}>{item}</Button>)}
           </div>}
         </div>
