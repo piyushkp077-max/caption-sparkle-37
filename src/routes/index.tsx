@@ -21,7 +21,8 @@ import {
   WandSparkles,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import kpLogo from "@/assets/kp-3d-logo-refined.png";
+import kpLogoAsset from "@/assets/kp-logo.png.asset.json";
+const kpLogo = kpLogoAsset.url;
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -234,7 +235,7 @@ function QuotelyApp() {
         <div className="mx-auto max-w-5xl px-4 pb-3 pt-3">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
-              <img src={kpLogo} alt="" width={1024} height={1024} className="size-11 shrink-0 object-contain drop-shadow-lg" aria-hidden="true" />
+              <img src={kpLogo} alt="KP logo" width={720} height={697} className="size-11 shrink-0 rounded-xl object-contain drop-shadow-lg" />
               <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
