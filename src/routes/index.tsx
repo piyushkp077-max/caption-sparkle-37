@@ -24,6 +24,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import kpLogoAsset from "@/assets/kp-logo.png.asset.json";
 const kpLogo = kpLogoAsset.url;
 import { Button } from "@/components/ui/button";
+import { quotesByCategory } from "@/lib/quotes-data";
 import { cn } from "@/lib/utils";
 
 type Quote = {
@@ -37,16 +38,22 @@ type Quote = {
 
 const categories = ["All", "Attitude", "Instagram Reels", "Romantic", "Motivation", "Sad", "Life", "Friends", "Single/Breakup"];
 
-const quotes: Quote[] = [
-  { id: 1, text: "Main apni khud ki story likhta hoon, tum bas page turn karo.", translation: "I write my own story, you just turn the page.", category: "Instagram Reels", views: "2.4M", gradient: "quote-gradient-one" },
-  { id: 2, text: "मेरा अंदाज़ ही मेरी पहचान है, इसे बदलने की कोशिश मत करना।", translation: "My attitude is my identity—don't try to change it.", category: "Attitude", views: "1.8M", gradient: "quote-gradient-three" },
-  { id: 3, text: "Koshish aaj karo, kal ke liye bahane mat chhodna.", translation: "Make the effort today; don't save excuses for tomorrow.", category: "Motivation", views: "890K", gradient: "quote-gradient-two" },
-  { id: 4, text: "तुम पास हो तो हर लम्हा थोड़ा और खूबसूरत लगता है।", translation: "Every moment feels more beautiful when you're near.", category: "Romantic", views: "765K", gradient: "quote-gradient-one" },
-  { id: 5, text: "कुछ दोस्त परिवार नहीं होते, फिर भी परिवार से कम नहीं होते।", translation: "Some friends aren't family, yet they mean no less than family.", category: "Friends", views: "612K", gradient: "quote-gradient-four" },
-  { id: 6, text: "Silence hurts most when you expected a conversation.", translation: "खामोशी सबसे ज़्यादा तब चुभती है जब बात की उम्मीद हो।", category: "Sad", views: "540K", gradient: "quote-gradient-five" },
-  { id: 7, text: "ज़िंदगी छोटी नहीं, हम जीना देर से शुरू करते हैं।", translation: "Life isn't short; we simply start living too late.", category: "Life", views: "498K", gradient: "quote-gradient-two" },
-  { id: 8, text: "Single, peaceful, and no longer explaining my worth.", translation: "अकेला हूँ, सुकून में हूँ, और अब अपनी कीमत नहीं समझाता।", category: "Single/Breakup", views: "455K", gradient: "quote-gradient-three" },
-];
+const gradients = ["quote-gradient-one", "quote-gradient-two", "quote-gradient-three", "quote-gradient-four", "quote-gradient-five"];
+
+const quotes: Quote[] = Object.entries(quotesByCategory).flatMap(([quoteCategory, entries], categoryIndex) =>
+  entries.map(([text, translation], entryIndex) => {
+    const id = categoryIndex * 1000 + entryIndex + 1;
+    const viewsValue = 2.6 - ((categoryIndex * 7 + entryIndex * 13) % 220) / 100;
+    return {
+      id,
+      text,
+      translation,
+      category: quoteCategory,
+      views: viewsValue >= 1 ? `${viewsValue.toFixed(1)}M` : `${Math.round(viewsValue * 1000)}K`,
+      gradient: gradients[(categoryIndex + entryIndex) % gradients.length] ?? gradients[0]!,
+    };
+  }),
+);
 
 type HashtagGroup = { name: string; tagline: string; gradient: string; tags: string[] };
 
