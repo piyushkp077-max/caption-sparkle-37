@@ -290,8 +290,8 @@ function QuotelyApp() {
       </main>
 
       {tab !== "create" && <Button variant="ink" className="fixed bottom-23 right-4 z-40 h-12 rounded-full px-4 shadow-elevated md:right-[max(1rem,calc((100vw-64rem)/2))]" onClick={() => setActiveTab("create")}><Plus /> Create</Button>}
-      <nav className="fixed inset-x-0 bottom-0 z-30 px-4 pb-4" aria-label="Main navigation">
-        <div className="mx-auto grid max-w-md grid-cols-4 rounded-2xl border border-glass-border bg-glass px-2 py-2 shadow-elevated backdrop-blur-xl">
+      <nav className="fixed inset-x-0 bottom-0 z-[999999] border-t border-border bg-background shadow-[0_-8px_30px_oklch(0.2_0.04_270/14%)]" aria-label="Main navigation" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
+        <div className="mx-auto grid max-w-md grid-cols-4 gap-1 px-3 pt-2">
           <TabButton active={tab === "home"} label="Home" icon={<Home />} onClick={() => setActiveTab("home")} />
           <TabButton active={tab === "hashtags"} label="Hashtags" icon={<Hash />} onClick={() => setActiveTab("hashtags")} />
           <TabButton active={tab === "saved"} label="Saved" icon={<Heart />} onClick={() => setActiveTab("saved")} />
