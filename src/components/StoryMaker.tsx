@@ -35,7 +35,7 @@ export function StoryMaker({ text, translation, id, onClose, notify }: { text: s
           <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Close" onClick={onClose}><X /></Button>
         </div>
         <div className="mx-auto mt-3 flex aspect-[9/16] w-full max-w-[230px] flex-col items-center justify-center rounded-2xl p-5 text-center text-story-foreground shadow-elevated" style={storyGradientStyle(colors)}>
-          <p className={cn("text-lg font-semibold leading-snug", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text}”</p>
+          <p className={cn("mt-auto text-lg font-semibold leading-snug", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text}”</p>
           {showSub && <p className="mt-2 text-[11px] opacity-80">{translation}</p>}
           <p className="mt-auto text-[7px] font-semibold uppercase tracking-[0.12em] opacity-75">KP's Captions, Quotes & Hashtags</p>
         </div>
