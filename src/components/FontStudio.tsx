@@ -15,7 +15,7 @@ const offset = (upper: number, lower: number, digit?: number, exceptions: Record
 };
 
 const smallCapsMap = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ";
-const styles: { name: string; map: (text: string) => string }[] = [
+const styles: { name: string; map: (text: string) => string }[] = ([
   { name: "Bold", map: offset(0x1d400, 0x1d41a, 0x1d7ce) },
   { name: "Italic", map: offset(0x1d434, 0x1d44e, undefined, { h: "ℎ" }) },
   { name: "Bold Italic", map: offset(0x1d468, 0x1d482) },
@@ -27,10 +27,10 @@ const styles: { name: string; map: (text: string) => string }[] = [
   { name: "Monospace", map: offset(0x1d670, 0x1d68a, 0x1d7f6) },
   { name: "Bubble", map: offset(0x24b6, 0x24d0) },
   { name: "Wide", map: offset(0xff21, 0xff41, 0xff10) },
-  { name: "Small Caps", map: (ch) => { const i = ch.toLowerCase().charCodeAt(0) - 97; return i >= 0 && i < 26 ? smallCapsMap[i]! : ch; } },
-  { name: "Strike", map: (ch) => (ch === " " ? ch : `${ch}\u0336`) },
-  { name: "Underline", map: (ch) => (ch === " " ? ch : `${ch}\u0332`) },
-].map((style) => ({ name: style.name, map: (text: string) => Array.from(text).map(style.map as Mapper).join("") }));
+  { name: "Small Caps", map: (ch: string) => { const i = ch.toLowerCase().charCodeAt(0) - 97; return i >= 0 && i < 26 ? smallCapsMap[i]! : ch; } },
+  { name: "Strike", map: (ch: string) => (ch === " " ? ch : `${ch}\u0336`) },
+  { name: "Underline", map: (ch: string) => (ch === " " ? ch : `${ch}\u0332`) },
+] as { name: string; map: Mapper }[]).map((style) => ({ name: style.name, map: (text: string) => Array.from(text).map(style.map).join("") }));
 
 const decorations = [(t: string) => t, (t: string) => `✦ ${t} ✦`, (t: string) => `꧁ ${t} ꧂`, (t: string) => `★彡 ${t} 彡★`, (t: string) => `•°¯\`•• ${t} ••´¯°•`, (t: string) => `▄︻デ ${t} ══━一`];
 
