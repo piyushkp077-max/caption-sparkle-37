@@ -68,6 +68,8 @@
   --color-story-soft: var(--story-soft);
   --color-story-border: var(--story-border);
   --color-story-foreground: var(--story-foreground);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-foreground: var(--whatsapp-foreground);
   --shadow-glass: var(--shadow-glass);
   --shadow-elevated: var(--shadow-elevated);
 }
@@ -112,6 +114,8 @@
   --story-soft: oklch(1 0 0 / 16%);
   --story-border: oklch(1 0 0 / 22%);
   --story-foreground: oklch(1 0 0);
+  --whatsapp: oklch(0.62 0.17 150);
+  --whatsapp-foreground: oklch(1 0 0);
   --shadow-glass: 0 8px 28px oklch(0.2 0.04 270 / 7%);
   --shadow-elevated: 0 12px 35px oklch(0.16 0.04 270 / 20%);
 }
@@ -155,6 +159,8 @@
   --story-soft: oklch(1 0 0 / 14%);
   --story-border: oklch(1 0 0 / 20%);
   --story-foreground: oklch(1 0 0);
+  --whatsapp: oklch(0.62 0.17 150);
+  --whatsapp-foreground: oklch(1 0 0);
   --shadow-glass: 0 8px 28px oklch(0.05 0.02 270 / 25%);
   --shadow-elevated: 0 12px 35px oklch(0.05 0.02 270 / 45%);
 }

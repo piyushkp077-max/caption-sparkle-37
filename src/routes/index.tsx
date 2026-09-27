@@ -30,6 +30,8 @@ import { quotesByCategory } from "@/lib/quotes-data";
 import { cn } from "@/lib/utils";
 import { StoryMaker } from "@/components/StoryMaker";
 import { FontStudio } from "@/components/FontStudio";
+import { PhotoCaption } from "@/components/PhotoCaption";
+import { ScanSearch } from "lucide-react";
 
 type Quote = {
   id: number;
@@ -40,7 +42,7 @@ type Quote = {
   gradient: string;
 };
 
-const categories = ["All", "Attitude", "Instagram Reels", "Romantic", "Motivation", "Sad", "Life", "Friends", "Single/Breakup"];
+const categories = ["All", "Attitude", "Instagram Reels", "Romantic", "Motivation", "Sad", "Life", "Friends", "Single/Breakup", "Daily Quotes"];
 
 const gradients = ["quote-gradient-one", "quote-gradient-two", "quote-gradient-three", "quote-gradient-four", "quote-gradient-five"];
 
@@ -70,6 +72,13 @@ const hashtagGroups: HashtagGroup[] = [
   { name: "Reels/Shorts Special", tagline: "Built for Reels, Shorts and quick viral hits", gradient: "quote-gradient-one", tags: ["#reels", "#reelsinstagram", "#reelsvideo", "#reelitfeelit", "#reelsindia", "#shorts", "#youtubeshorts", "#reelkarofeelkaro", "#viralreels", "#trendingreels", "#reelsofinstagram", "#reelsdaily", "#explorepage", "#viralvideo", "#instavideo", "#contentcreator"] },
   { name: "Life Reality", tagline: "Real talk about zindagi and truth", gradient: "quote-gradient-two", tags: ["#life", "#zindagi", "#reality", "#truth", "#lifequotes", "#factsoflife", "#deep", "#thoughts", "#lifelessons", "#realtalk", "#waqt", "#kismat", "#lifeislife", "#wisdom", "#experience", "#sach"] },
   { name: "Friendship", tagline: "Dosti, yaari and squad love", gradient: "quote-gradient-four", tags: ["#friends", "#friendship", "#dosti", "#yaari", "#bff", "#bestfriends", "#squad", "#friendshipgoals", "#yaar", "#dost", "#friendsforever", "#brotherhood", "#masti", "#gang", "#memories", "#foreverfriends"] },
+  { name: "Daily Quotes", tagline: "Good morning posts, thoughts and daily vibes", gradient: "quote-gradient-two", tags: ["#dailyquotes", "#quoteoftheday", "#goodmorning", "#thoughtoftheday", "#suvichar", "#hindiquotes", "#dailymotivation", "#positivevibes", "#morningvibes", "#quotestoliveby", "#aajkasuvichar", "#wordsofwisdom", "#inspirationalquotes", "#dailyinspiration", "#lifequotes", "#quotesdaily"] },
+  { name: "Hindi Shayari", tagline: "दिल की बात, शायरी के साथ", gradient: "quote-gradient-five", tags: ["#shayari", "#hindishayari", "#urdushayari", "#shayarilover", "#dilkibaat", "#hindipoetry", "#ishqshayari", "#sadshayari", "#loveshayari", "#rekhta", "#hindiwriting", "#alfaaz", "#jazbaat", "#lafz", "#hindiquotes", "#shayarikiduniya"] },
+  { name: "Attitude Hindi", tagline: "Desi swag aur royal attitude", gradient: "quote-gradient-three", tags: ["#attitudeshayari", "#hindiattitude", "#nawabi", "#rajputana", "#dabangg", "#khiladi", "#apnatimeaayega", "#swagger", "#desiboy", "#desigirl", "#jalwa", "#rutba", "#bhaigiri", "#attitudeking", "#queenattitude", "#tashan"] },
+  { name: "Love Hindi", tagline: "Pyaar, ishq aur mohabbat ke tags", gradient: "quote-gradient-one", tags: ["#pyaar", "#ishqwala", "#mohabbatein", "#dilse", "#jaanu", "#meriduniya", "#tumhare_liye", "#pehlapyaar", "#loveshayari", "#hindilove", "#premkahani", "#saathhamesha", "#dilkirani", "#humsafar", "#chahat", "#romanticshayari"] },
+  { name: "Sad Hindi", tagline: "Tanhai, dard aur toota dil", gradient: "quote-gradient-four", tags: ["#dardbharishayari", "#tanhai", "#toota_dil", "#bewafa", "#akelapan", "#dard", "#yaadein", "#sadstatus", "#brokenheart", "#aansu", "#judai", "#sadhindi", "#dilkadard", "#khamoshi", "#adhurapyar", "#emotional"] },
+  { name: "Motivation Hindi", tagline: "Mehnat, junoon aur kamyabi", gradient: "quote-gradient-two", tags: ["#hindimotivation", "#mehnat", "#safalta", "#kamyabi", "#junoon", "#sapne", "#himmat", "#lakshya", "#motivationhindi", "#jeetega", "#studymotivation", "#upsc", "#successmantra", "#josh", "#jazba", "#kabhiharnamat"] },
+  { name: "Reels Hindi", tagline: "Desi Reels aur Shorts ke liye", gradient: "quote-gradient-one", tags: ["#reelsindia", "#desireels", "#hindireels", "#bollywood", "#bollywoodreels", "#trendingsongs", "#reelkaro", "#indianreels", "#hindisong", "#reelsbollywood", "#viralindia", "#instaindia", "#mumbai", "#delhi", "#reelsvideo", "#shortsfeed"] },
 ];
 
 const creatorBackgrounds = [
@@ -100,7 +109,7 @@ function QuotelyApp() {
   const [category, setCategory] = useState("All");
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [tab, setTab] = useState<"home" | "saved" | "create" | "hashtags" | "fonts">("home");
+  const [tab, setTab] = useState<"home" | "saved" | "create" | "hashtags" | "fonts" | "ai">("home");
   const [makerQuote, setMakerQuote] = useState<Quote | null>(null);
   const [toast, setToast] = useState("");
   const [speakingId, setSpeakingId] = useState<number | "daily" | null>(null);
@@ -235,7 +244,7 @@ function QuotelyApp() {
     }
   };
 
-  const setActiveTab = (next: "home" | "saved" | "create" | "hashtags" | "fonts") => {
+  const setActiveTab = (next: "home" | "saved" | "create" | "hashtags" | "fonts" | "ai") => {
     setTab(next);
     if (next === "home") setCategory("All");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -266,7 +275,9 @@ function QuotelyApp() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
-        {tab === "fonts" ? (
+        {tab === "ai" ? (
+          <PhotoCaption onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} onWhatsApp={(text) => window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer")} />
+        ) : tab === "fonts" ? (
           <FontStudio onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} />
         ) : tab === "hashtags" ? (
           <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
@@ -296,11 +307,11 @@ function QuotelyApp() {
         )}
       </main>
 
-      {tab !== "create" && <Button variant="ink" className="fixed bottom-23 right-4 z-40 h-12 rounded-full px-4 shadow-elevated md:right-[max(1rem,calc((100vw-64rem)/2))]" onClick={() => setActiveTab("create")}><Plus /> Create</Button>}
       <nav className="fixed inset-x-0 bottom-0 z-[999999] border-t border-border bg-background shadow-[0_-8px_30px_oklch(0.2_0.04_270/14%)]" aria-label="Main navigation" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
-        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1 px-3 pt-2">
+        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 px-3 pt-2">
           <TabButton active={tab === "home"} label="Home" icon={<Home />} onClick={() => setActiveTab("home")} />
           <TabButton active={tab === "hashtags"} label="Hashtags" icon={<Hash />} onClick={() => setActiveTab("hashtags")} />
+          <TabButton active={tab === "ai"} label="AI Photo" icon={<ScanSearch />} onClick={() => setActiveTab("ai")} />
           <TabButton active={tab === "fonts"} label="Fonts" icon={<Type />} onClick={() => setActiveTab("fonts")} />
           <TabButton active={tab === "saved"} label="Saved" icon={<Heart />} onClick={() => setActiveTab("saved")} />
           <TabButton active={tab === "create"} label="Create" icon={<WandSparkles />} onClick={() => setActiveTab("create")} />
@@ -344,10 +355,12 @@ function QuoteCard({ quote, favorite, speaking, delay, onCopy, onFavorite, onLis
     <div className={cn("relative min-h-52 overflow-hidden rounded-2xl p-5 text-story-foreground shadow-elevated", quote.gradient)}>
       <div className="relative flex h-full min-h-42 flex-col justify-between"><div className="flex items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-[0.14em] opacity-80"><span>{quote.category}</span><span className="flex items-center gap-2">{quote.views} views<button aria-label={favorite ? "Remove from saved" : "Save caption"} onClick={onFavorite} className="grid size-8 place-items-center rounded-full bg-story-soft transition active:scale-90"><Heart className={cn("size-4", favorite && "fill-current")} /></button></span></div><div><p className={cn("mt-5 text-[24px] font-medium leading-tight", /[\u0900-\u097F]/.test(quote.text) ? "font-hindi" : "font-display")}>“{quote.text}”</p><p className={cn("mt-2 text-sm opacity-80", /[\u0900-\u097F]/.test(quote.translation) && "font-hindi")}>{quote.translation}</p></div></div>
     </div>
-    <div className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_repeat(4,2.25rem)] gap-1.5">
-      <Button variant="glass" size="sm" className="min-w-0 rounded-full px-2" onClick={onCopy}><Copy /> <span className="hidden min-[350px]:inline">Copy</span></Button>
-      <Button variant="ink" size="sm" className="min-w-0 rounded-full px-2" onClick={onCreateImage}><ImagePlus /> <span className="truncate">Create Image</span></Button>
-      <Button variant="glassIcon" size="dock" aria-label="Share on WhatsApp" title="WhatsApp" onClick={() => onShare("whatsapp")}><Share2 /></Button>
+    <div className="mt-2 grid grid-cols-3 gap-1.5">
+      <Button variant="glass" size="sm" className="min-w-0 rounded-full px-2" onClick={onCopy}><Copy /> Copy</Button>
+      <Button size="sm" className="min-w-0 rounded-full bg-whatsapp px-2 text-whatsapp-foreground hover:bg-whatsapp/90" aria-label="Share to WhatsApp" onClick={() => onShare("whatsapp")}><Share2 /> <span className="truncate">WhatsApp</span></Button>
+      <Button variant="ink" size="sm" className="min-w-0 rounded-full px-2" onClick={onCreateImage}><ImagePlus /> <span className="truncate">Image</span></Button>
+    </div>
+    <div className="mt-1.5 flex justify-end gap-1.5">
       <Button variant="glassIcon" size="dock" aria-label="Share on Instagram" title="Instagram" onClick={() => onShare("instagram")}><Instagram /></Button>
       <Button variant="glassIcon" size="dock" aria-label={favorite ? "Remove from favorites" : "Save to favorites"} title="Favorite" onClick={onFavorite}><Heart className={cn(favorite && "fill-primary text-primary")} /></Button>
       <Button variant="glassIcon" size="dock" aria-label={speaking ? "Stop listening" : "Listen to quote"} title="Listen" onClick={onListen}>{speaking ? <Pause /> : <Play />}</Button>
