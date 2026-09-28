@@ -93,9 +93,9 @@ const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? cre
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "KP's Captions, Quotes & Hashtags" },
+      { title: "Caption Craze" },
       { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards — plus viral hashtag bundles." },
-      { property: "og:title", content: "KP's Captions, Quotes & Hashtags" },
+      { property: "og:title", content: "Caption Craze" },
       { property: "og:description", content: "Discover viral captions and create downloadable Instagram story quote cards." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -192,7 +192,7 @@ function QuotelyApp() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const downloadStory = (text: string, colors: string[], filename = "kp-story.png", font = "Fraunces") => {
+  const downloadStory = (text: string, colors: string[], filename = "caption-craze-story.png", font = "Fraunces") => {
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1920;
@@ -223,7 +223,7 @@ function QuotelyApp() {
     lines.forEach((item, index) => context.fillText(item, 540, startY + index * lineHeight));
     context.globalAlpha = 0.78;
     context.font = "500 29px Manrope, sans-serif";
-    context.fillText("KP'S CAPTIONS, QUOTES & HASHTAGS", 540, 1770);
+    context.fillText("CAPTION CRAZE", 540, 1770);
     const link = document.createElement("a");
     link.download = filename;
     link.href = canvas.toDataURL("image/png");
@@ -237,7 +237,7 @@ function QuotelyApp() {
       return;
     }
     if (navigator.share) {
-      try { await navigator.share({ text: quote.text, title: "KP's Captions, Quotes & Hashtags" }); } catch { return; }
+      try { await navigator.share({ text: quote.text, title: "Caption Craze" }); } catch { return; }
     } else {
       await copyText(quote.text);
       notify("Caption copied — paste it in Instagram");
@@ -257,7 +257,7 @@ function QuotelyApp() {
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
               <img src={kpLogo} alt="KP logo" width={720} height={697} className="size-11 shrink-0 rounded-xl object-contain drop-shadow-lg" />
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">KP's Captions, Quotes & Hashtags</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Caption Studio</span></span>
+              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">Caption Craze</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Captions, Quotes & Hashtags</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
@@ -282,7 +282,7 @@ function QuotelyApp() {
         ) : tab === "hashtags" ? (
           <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
         ) : tab === "create" ? (
-          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-kp-story.png", creatorFont)} />
+          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-caption-craze.png", creatorFont)} />
         ) : (
           <>
             {tab === "home" && <section className="rise relative overflow-hidden rounded-2xl quote-gradient-one p-5 text-story-foreground shadow-elevated">

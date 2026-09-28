@@ -43,7 +43,7 @@ const bioCategories: { name: string; bios: string[] }[] = [
 ];
 
 export function FontStudio({ onCopy }: { onCopy: (text: string, message: string) => void }) {
-  const [input, setInput] = useState("KP Captions");
+  const [input, setInput] = useState("Caption Craze");
   const [deco, setDeco] = useState(0);
   const [bioCat, setBioCat] = useState(0);
   const source = input.trim() || "Your Name";

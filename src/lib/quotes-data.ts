@@ -1,4 +1,4 @@
-// KP's Captions, Quotes & Hashtags — internal caption database
+// Caption Craze — internal caption database
 // Each entry: [caption text, translation / companion line]
 
 export type RawQuote = [text: string, translation: string];
