@@ -56,7 +56,7 @@ export function renderStoryCanvas(text: string, colors: string[], font = "Fraunc
   }
   context.globalAlpha = 0.78;
   context.font = "500 29px Manrope, sans-serif";
-  context.fillText("KP'S CAPTIONS, QUOTES & HASHTAGS", 540, 1770);
+  context.fillText("CAPTION CRAZE", 540, 1770);
   return canvas;
 }
 

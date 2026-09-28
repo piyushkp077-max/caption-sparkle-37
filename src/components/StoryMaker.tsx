@@ -21,7 +21,7 @@ export function StoryMaker({ text, translation, id, onClose, notify }: { text: s
   }, [onClose]);
 
   const build = () => renderStoryCanvas(text, colors, font, showSub ? translation : "");
-  const filename = `kp-story-${id}.png`;
+  const filename = `caption-craze-${id}.png`;
   const share = async (where: string) => {
     const shared = await shareCanvas(build(), filename, text);
     notify(shared ? `Choose ${where} in the share menu` : "Image saved — upload it to your Story/Status");
@@ -37,7 +37,7 @@ export function StoryMaker({ text, translation, id, onClose, notify }: { text: s
         <div className="mx-auto mt-3 flex aspect-[9/16] w-full max-w-[230px] flex-col items-center justify-center rounded-2xl p-5 text-center text-story-foreground shadow-elevated" style={storyGradientStyle(colors)}>
           <p className={cn("mt-auto text-lg font-semibold leading-snug", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text}”</p>
           {showSub && <p className="mt-2 text-[11px] opacity-80">{translation}</p>}
-          <p className="mt-auto text-[7px] font-semibold uppercase tracking-[0.12em] opacity-75">KP's Captions, Quotes & Hashtags</p>
+          <p className="mt-auto text-[7px] font-semibold uppercase tracking-[0.12em] opacity-75">Caption Craze</p>
         </div>
         <p className="mt-4 text-xs font-semibold text-muted-foreground">Background</p>
         <div className="no-scrollbar mt-2 flex gap-2.5 overflow-x-auto pb-1">
