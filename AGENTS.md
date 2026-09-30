@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Admin analytics: app_events table (service-role only, RLS no policies) written via server fns; /admin gated by ADMIN_PASSWORD + encrypted session cookie. Why: no user accounts, keep data private.
