@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SplashScreen } from "../components/SplashScreen";
+import { useServerFn } from "@tanstack/react-start";
+import { trackVisit } from "../lib/analytics.functions";
+import { getVisitorId } from "../lib/visitor";
 
 function NotFoundComponent() {
   return (
@@ -119,6 +122,11 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const track = useServerFn(trackVisit);
+  useEffect(() => {
+    if (window.location.pathname.startsWith("/admin")) return;
+    track({ data: { visitorId: getVisitorId() } }).catch(() => {});
+  }, [track]);
 
   return (
     <QueryClientProvider client={queryClient}>

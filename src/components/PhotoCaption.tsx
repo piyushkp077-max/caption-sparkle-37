@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { captionFromPhoto, type AiCaption } from "@/lib/caption-ai.functions";
 import { shuffled, videoCaptions } from "@/lib/video-captions";
+import { getVisitorId } from "@/lib/visitor";
 
 const languages = ["Hinglish", "Hindi", "English"] as const;
 
@@ -62,7 +63,7 @@ export function PhotoCaption({ onCopy, onWhatsApp }: { onCopy: (text: string, me
     setNote(""); setLoading(true); setCaptions([]); setMood("");
     try {
       const images = video ? await videoFrames(video) : [image];
-      const result = await run({ data: { images, kind: video ? "video" : "photo", language } });
+      const result = await run({ data: { images, kind: video ? "video" : "photo", language, visitorId: getVisitorId() } });
       if ("error" in result) fallback();
       else { setCaptions(result.captions); setMood(result.mood); }
     } catch { fallback(); }
