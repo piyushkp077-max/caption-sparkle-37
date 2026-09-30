@@ -7,6 +7,7 @@ const Input = z.object({
   images: z.array(z.string().startsWith("data:image/").max(3_000_000)).min(1).max(4),
   kind: z.enum(["photo", "video"]),
   language: z.enum(["Hindi", "English", "Hinglish"]),
+  visitorId: z.string().max(64).optional(),
 });
 
 export const captionFromPhoto = createServerFn({ method: "POST" })
@@ -14,6 +15,7 @@ export const captionFromPhoto = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<{ mood: string; captions: AiCaption[] } | { error: string }> => {
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) return { error: "AI is not configured yet." };
+    { const { logEvent } = await import("./analytics.server"); await logEvent("ai", data.visitorId || "unknown"); }
     const what = data.kind === "video" ? `these ${data.images.length} frames taken from one video (treat them as a single reel)` : "this photo";
     const prompt = `Deeply analyse ${what}: people, expressions, setting, lighting, colours, action and overall story. Decide the single dominant mood from: Emotional, Attitude, Sad, Aesthetic, Cinematic, Funny, Motivational, Royal, Romantic, Friendship.
 Then write 9 highly attractive, deeply meaningful Instagram ${data.kind === "video" ? "Reel" : "post"} captions in ${data.language} tailored exactly to that mood and to specific details you see.
