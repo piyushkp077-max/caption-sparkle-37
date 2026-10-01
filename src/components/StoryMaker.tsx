@@ -1,4 +1,4 @@
-import { Download, Instagram, Share2, X } from "lucide-react";
+import { Download, Instagram, Share2, X, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -45,7 +45,7 @@ export function StoryMaker({ text, translation, id, onClose, notify }: { text: s
         </div>
         <p className="mt-3 text-xs font-semibold text-muted-foreground">Font</p>
         <div className="mt-2 grid grid-cols-3 gap-2">{fonts.map((item) => <Button key={item} variant={font === item ? "ink" : "outline"} size="sm" className={cn("min-w-0 px-2", item === "Tiro Devanagari Hindi" && "font-hindi")} onClick={() => setFont(item)}>{item === "Tiro Devanagari Hindi" ? "हिंदी" : item}</Button>)}</div>
-        <label className="mt-3 flex items-center gap-2 text-xs font-medium text-muted-foreground"><input type="checkbox" checked={showSub} onChange={(event) => setShowSub(event.target.checked)} className="accent-primary" /> Show translation line</label>
+        <div className="mt-3 flex items-center justify-between gap-2"><label className="flex items-center gap-2 text-xs font-medium text-muted-foreground"><input type="checkbox" checked={showSub} onChange={(event) => setShowSub(event.target.checked)} className="accent-primary" /> Show translation line</label><Button size="sm" variant="ghost" className="rounded-full" onClick={() => { setBg(id % storyBackgrounds.length); setFont(isHindi ? "Tiro Devanagari Hindi" : "Fraunces"); setShowSub(true); }}><RotateCcw /> Reset</Button></div>
         <div className="mt-4 grid grid-cols-2 gap-2">
           <Button variant="ink" className="rounded-xl" onClick={() => share("Instagram")}><Instagram /> Insta Story</Button>
           <Button variant="ink" className="rounded-xl" onClick={() => share("WhatsApp")}><Share2 /> WA Status</Button>

@@ -21,7 +21,9 @@ import {
   Type,
   WandSparkles,
   ImagePlus,
+  RotateCcw,
 } from "lucide-react";
+import { downloadCanvas, renderStoryCanvas } from "@/lib/story-canvas";
 import { useEffect, useMemo, useRef, useState } from "react";
 import kpLogoAsset from "@/assets/kp-logo.png.asset.json";
 const kpLogo = kpLogoAsset.url;
@@ -192,42 +194,8 @@ function QuotelyApp() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const downloadStory = (text: string, colors: string[], filename = "caption-craze-story.png", font = "Fraunces") => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1080;
-    canvas.height = 1920;
-    const context = canvas.getContext("2d");
-    if (!context) return;
-    const gradient = context.createLinearGradient(0, 0, 1080, 1920);
-    gradient.addColorStop(0, colors[0] ?? "#6366f1");
-    gradient.addColorStop(1, colors[1] ?? "#ec4899");
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = "rgba(255,255,255,.12)";
-    context.beginPath(); context.arc(910, 250, 300, 0, Math.PI * 2); context.fill();
-    context.beginPath(); context.arc(120, 1750, 370, 0, Math.PI * 2); context.fill();
-    context.fillStyle = "#ffffff";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.font = `600 76px ${font}, serif`;
-    const words = text.split(" ");
-    const lines: string[] = [];
-    let line = "";
-    words.forEach((word) => {
-      const test = `${line}${word} `;
-      if (context.measureText(test).width > 850 && line) { lines.push(line.trim()); line = `${word} `; } else line = test;
-    });
-    if (line) lines.push(line.trim());
-    const lineHeight = 102;
-    const startY = 930 - ((lines.length - 1) * lineHeight) / 2;
-    lines.forEach((item, index) => context.fillText(item, 540, startY + index * lineHeight));
-    context.globalAlpha = 0.78;
-    context.font = "500 29px Manrope, sans-serif";
-    context.fillText("CAPTION CRAZE", 540, 1770);
-    const link = document.createElement("a");
-    link.download = filename;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+  const downloadStory = (text: string, colors: string[], filename: string, font: string) => {
+    downloadCanvas(renderStoryCanvas(text, colors, font), filename);
     notify("Story image downloaded");
   };
 
@@ -282,7 +250,7 @@ function QuotelyApp() {
         ) : tab === "hashtags" ? (
           <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
         ) : tab === "create" ? (
-          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-caption-craze.png", creatorFont)} />
+          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onReset={() => { setCreatorText(""); setCreatorFont("Fraunces"); setCreatorBg(0); }} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-caption-craze.png", creatorFont)} />
         ) : (
           <>
             {tab === "home" && <section className="rise relative overflow-hidden rounded-2xl quote-gradient-one p-5 text-story-foreground shadow-elevated">
@@ -368,9 +336,9 @@ function QuoteCard({ quote, favorite, speaking, delay, onCopy, onFavorite, onLis
   </article>;
 }
 
-function Creator({ text, setText, font, setFont, background, setBackground, onDownload }: { text: string; setText: (value: string) => void; font: string; setFont: (value: string) => void; background: number; setBackground: (value: number) => void; onDownload: () => void }) {
+function Creator({ text, setText, font, setFont, background, setBackground, onDownload, onReset }: { onReset: () => void; text: string; setText: (value: string) => void; font: string; setFont: (value: string) => void; background: number; setBackground: (value: number) => void; onDownload: () => void }) {
   return <section className="rise mx-auto max-w-2xl">
-    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Your words, your style</p><h1 className="mt-1 font-display text-3xl font-medium">Quote Creator</h1>
+    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Your words, your style</p><div className="mt-1 flex items-center justify-between gap-3"><h1 className="font-display text-3xl font-medium">Quote Creator</h1><Button size="sm" variant="outline" className="rounded-full" onClick={onReset}><RotateCcw /> Reset</Button></div>
     <div className={cn("mt-5 flex aspect-[9/12] max-h-[480px] items-center justify-center rounded-2xl p-8 text-center text-story-foreground shadow-elevated", getCreatorBackground(background)?.className)}><p className={cn("max-w-md text-[clamp(1.5rem,7vw,2.5rem)] font-semibold leading-tight", font === "Tiro Devanagari Hindi" ? "font-hindi" : font === "Manrope" ? "font-body" : "font-display")}>“{text || "Your quote will appear here."}”</p></div>
     <div className="mt-5 space-y-5 rounded-2xl border border-glass-border bg-glass p-4 shadow-glass backdrop-blur-xl">
       <label className="block"><span className="text-xs font-semibold text-muted-foreground">Your caption</span><textarea value={text} maxLength={180} onChange={(event) => setText(event.target.value)} rows={3} className="mt-2 w-full resize-none rounded-xl border border-input bg-background/70 p-3 text-sm outline-none ring-primary transition focus:ring-2" placeholder="Write something unforgettable…" /><span className="mt-1 block text-right text-[10px] text-muted-foreground">{text.length}/180</span></label>

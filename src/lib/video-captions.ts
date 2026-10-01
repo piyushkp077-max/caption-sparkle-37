@@ -1,4 +1,4 @@
-import type { AiCaption } from "@/lib/caption-ai.functions";
+export type AiCaption = { text: string; translation: string; hashtags: string[] };
 
 export const videoCaptions: AiCaption[] = [
   { text: "Main character energy for your reel! 🎬✨", translation: "", hashtags: ["#ReelsViral", "#TrendingReels", "#ExplorePage", "#ViralReels", "#ShortsVideo", "#ReelItFeelIt"] },
