@@ -1,4 +1,4 @@
-import { Copy, Type } from "lucide-react";
+import { Copy, RotateCcw, Type } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -52,7 +52,7 @@ export function FontStudio({ onCopy }: { onCopy: (text: string, message: string)
   return (
     <section className="rise mx-auto max-w-2xl">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Stand out on Instagram</p>
-      <h1 className="mt-1 flex items-center gap-2 font-display text-2xl font-medium"><Type className="size-5 text-primary" />Bio & Fancy Fonts</h1>
+      <div className="mt-1 flex items-center justify-between gap-3"><h1 className="flex items-center gap-2 font-display text-2xl font-medium"><Type className="size-5 text-primary" />Bio & Fancy Fonts</h1><Button size="sm" variant="outline" className="rounded-full" onClick={() => { setInput(""); setDeco(0); setBioCat(0); }}><RotateCcw /> Reset</Button></div>
 
       <div className="mt-4 rounded-2xl border border-glass-border bg-glass p-4 shadow-glass backdrop-blur-xl">
         <label className="block"><span className="text-xs font-semibold text-muted-foreground">Type your name or text</span>
