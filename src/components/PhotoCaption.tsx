@@ -2,7 +2,7 @@ import { Camera, Copy, Hash, Loader2, RefreshCw, RotateCcw, Share2, Sparkles, Up
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { shuffled, videoCaptions, type AiCaption } from "@/lib/video-captions";
+import { type AiCaption } from "@/lib/video-captions";
 import { getVisitorId } from "@/lib/visitor";
 import { globalCategories, type CaptionLanguage } from "@/lib/caption-settings";
 
@@ -63,7 +63,7 @@ export function PhotoCaption({ onCopy, onWhatsApp, language, category, mode = "m
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const fallback = () => { setCaptions((c) => (c.length ? c : shuffled(videoCaptions))); setNote("AI is busy right now — showing trending picks. Tap Generate Again to retry."); };
+  const fallback = () => setNote("Couldn't finish your captions. Please try again.");
 
   const generate = async () => {
     if (loading || (mode === "media" ? !media : !prompt.trim())) return;
