@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Admin analytics: app_events table (service-role only, RLS no policies) written via server fns; /admin gated by ADMIN_PASSWORD + encrypted session cookie. Why: no user accounts, keep data private.
+- Caption settings share one language/category validation module across the header and caption endpoint; prompt and media use the same streaming generator to keep language behavior consistent.
+- Retain legacy quote IDs and favorite storage keys when regrouping home content so existing saved captions remain accessible; new fitness entries use a separate ID range.
