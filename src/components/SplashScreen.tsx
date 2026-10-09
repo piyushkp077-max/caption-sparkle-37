@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import splash from "@/assets/splash.png.asset.json";
+import logo from "@/assets/kp-logo.png.asset.json";
 
 export function SplashScreen() {
   const [phase, setPhase] = useState<"show" | "fade" | "done">("show");
@@ -17,11 +17,13 @@ export function SplashScreen() {
 
   return (
     <div
-      className={`fixed inset-0 z-[1000000] flex items-center justify-center bg-[oklch(0_0_0)] transition-opacity duration-500 select-none ${phase === "fade" ? "opacity-0" : "opacity-100"}`}
-      aria-label="Caption Craze — Created by Piyush KP"
+      className={`fixed inset-0 z-[1000000] flex flex-col gap-6 items-center justify-center bg-background text-foreground transition-opacity duration-500 select-none ${phase === "fade" ? "opacity-0" : "opacity-100"}`}
+      aria-label="Caption Generate AI — Created by Piyush KP"
       role="img"
     >
-      <img src={splash.url} alt="Caption Craze by Piyush KP" className="h-full w-full max-w-md object-contain" />
+      <img src={logo.url} alt="KP logo" className="size-28 object-contain" />
+      <span className="font-body text-2xl font-bold">Caption Generate AI</span>
+      <span className="text-sm text-muted-foreground">Created by Piyush KP</span>
     </div>
   );
 }

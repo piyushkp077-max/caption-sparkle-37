@@ -33,6 +33,9 @@ import { cn } from "@/lib/utils";
 import { StoryMaker } from "@/components/StoryMaker";
 import { FontStudio } from "@/components/FontStudio";
 import { PhotoCaption } from "@/components/PhotoCaption";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { globalCategories, globalCategoryFor, type CaptionLanguage } from "@/lib/caption-settings";
+import { fitnessQuotes } from "@/lib/fitness-quotes";
 import { ScanSearch } from "lucide-react";
 
 type Quote = {
@@ -44,7 +47,7 @@ type Quote = {
   gradient: string;
 };
 
-const categories = ["All", "Attitude", "Instagram Reels", "Romantic", "Motivation", "Sad", "Life", "Friends", "Single/Breakup", "Daily Quotes"];
+const categories = globalCategories;
 
 const gradients = ["quote-gradient-one", "quote-gradient-two", "quote-gradient-three", "quote-gradient-four", "quote-gradient-five"];
 
@@ -56,12 +59,14 @@ const quotes: Quote[] = Object.entries(quotesByCategory).flatMap(([quoteCategory
       id,
       text,
       translation,
-      category: quoteCategory,
+      category: globalCategoryFor(quoteCategory),
       views: viewsValue >= 1 ? `${viewsValue.toFixed(1)}M` : `${Math.round(viewsValue * 1000)}K`,
-      gradient: gradients[(categoryIndex + entryIndex) % gradients.length] ?? gradients[0]!,
+      gradient: gradients[(categoryIndex + entryIndex) % gradients.length] ?? "quote-gradient-one",
     };
   }),
 );
+
+quotes.push(...fitnessQuotes.map(([text, translation], index) => ({ id: 100000 + index, text, translation, category: globalCategories[2], views: "", gradient: gradients[index % gradients.length] ?? "quote-gradient-one" })));
 
 type HashtagGroup = { name: string; tagline: string; gradient: string; tags: string[] };
 
@@ -95,10 +100,10 @@ const getCreatorBackground = (index: number) => creatorBackgrounds[index] ?? cre
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Caption Craze" },
-      { name: "description", content: "Copy, share, save, listen to, and create beautiful trending Hindi and English quote cards — plus viral hashtag bundles." },
-      { property: "og:title", content: "Caption Craze" },
-      { property: "og:description", content: "Discover viral captions and create downloadable Instagram story quote cards." },
+      { title: "Caption Generate AI" },
+      { name: "description", content: "Generate multilingual AI captions from one prompt, photos or videos. Discover aesthetic, success, fitness and still quotes." },
+      { property: "og:title", content: "Caption Generate AI" },
+      { property: "og:description", content: "Create native-language captions and hashtags from text, photos and videos with Caption Generate AI." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -108,7 +113,8 @@ export const Route = createFileRoute("/")({
 
 function QuotelyApp() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState<string>(globalCategories[0]);
+  const [language, setLanguage] = useState<CaptionLanguage>("English");
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
   const [tab, setTab] = useState<"home" | "saved" | "create" | "hashtags" | "fonts" | "ai">("home");
@@ -139,7 +145,7 @@ function QuotelyApp() {
   const visibleQuotes = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return quotes.filter((quote) => {
-      const categoryMatch = category === "All" || quote.category === category;
+      const categoryMatch = tab === "saved" || quote.category === category;
       const searchMatch = !normalized || `${quote.text} ${quote.translation} ${quote.category}`.toLowerCase().includes(normalized);
       const favoriteMatch = tab !== "saved" || favorites.includes(quote.id);
       return categoryMatch && searchMatch && favoriteMatch;
@@ -205,7 +211,7 @@ function QuotelyApp() {
       return;
     }
     if (navigator.share) {
-      try { await navigator.share({ text: quote.text, title: "Caption Craze" }); } catch { return; }
+      try { await navigator.share({ text: quote.text, title: "Caption Generate AI" }); } catch { return; }
     } else {
       await copyText(quote.text);
       notify("Caption copied — paste it in Instagram");
@@ -214,7 +220,7 @@ function QuotelyApp() {
 
   const setActiveTab = (next: "home" | "saved" | "create" | "hashtags" | "fonts" | "ai") => {
     setTab(next);
-    if (next === "home") setCategory("All");
+    if (next === "home") setCategory(globalCategories[0]);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -225,7 +231,7 @@ function QuotelyApp() {
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
             <button className="flex min-w-0 items-center gap-2 text-left" onClick={() => setActiveTab("home")} aria-label="Go home">
               <img src={kpLogo} alt="KP logo" width={720} height={697} className="size-11 shrink-0 rounded-xl object-contain drop-shadow-lg" />
-              <span className="min-w-0 leading-none"><span className="block truncate font-display text-[13.5px] font-medium leading-tight">Caption Craze</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Captions, Quotes & Hashtags</span></span>
+              <span className="min-w-0 leading-none"><span className="block font-body text-sm font-bold leading-tight">Caption Generate AI</span><span className="mt-1 block truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Captions, Quotes & Hashtags</span></span>
             </button>
             <div className="flex shrink-0 items-center gap-1.5">
               <Button variant="glassIcon" size="icon" className="rounded-full" aria-label="Saved favorites" onClick={() => setActiveTab("saved")}><Heart className={cn(favorites.length > 0 && "fill-primary text-primary")} /></Button>
@@ -236,31 +242,25 @@ function QuotelyApp() {
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground/70" placeholder="Search captions, mood, keyword…" aria-label="Search quotes" />
           </label>
-          {(tab === "home" || tab === "saved") && <div className="no-scrollbar -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1">
-            {categories.map((item) => <Button key={item} variant={category === item ? "ink" : "glass"} size="pill" className="shrink-0" onClick={() => setCategory(item)}>{item}</Button>)}
+          <LanguageSelector value={language} onChange={setLanguage} />
+          {tab === "home" && <div className="mt-3 grid grid-cols-2 gap-2">
+            {categories.map((item) => <Button key={item} variant={category === item ? "ink" : "glass"} size="sm" className="h-auto min-h-11 whitespace-normal px-2 py-2 text-xs leading-snug" onClick={() => setCategory(item)}>{item}</Button>)}
           </div>}
         </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-4">
         {tab === "ai" ? (
-          <PhotoCaption onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} onWhatsApp={(text) => window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer")} />
+          <PhotoCaption language={language} category={category} onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} onWhatsApp={(text) => window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer")} />
         ) : tab === "fonts" ? (
           <FontStudio onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} />
         ) : tab === "hashtags" ? (
           <Hashtags groups={visibleHashtagGroups} onCopyAll={copyAllHashtags} />
         ) : tab === "create" ? (
-          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onReset={() => { setCreatorText(""); setCreatorFont("Fraunces"); setCreatorBg(0); }} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-caption-craze.png", creatorFont)} />
+          <Creator text={creatorText} setText={setCreatorText} font={creatorFont} setFont={setCreatorFont} background={creatorBg} setBackground={setCreatorBg} onReset={() => { setCreatorText(""); setCreatorFont("Fraunces"); setCreatorBg(0); }} onDownload={() => downloadStory(creatorText, getCreatorBackground(creatorBg)?.colors ?? [], "my-caption-generate-ai.png", creatorFont)} />
         ) : (
           <>
-            {tab === "home" && <section className="rise relative overflow-hidden rounded-2xl quote-gradient-one p-5 text-story-foreground shadow-elevated">
-              <div className="relative">
-                <div className="flex items-center gap-2"><span className="rounded-full bg-story-soft px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.15em]">Quote of the day</span><span className="text-[11px] opacity-75">Today</span></div>
-                <p className="mt-4 max-w-2xl font-hindi text-[24px] font-medium leading-tight">“पहले खुद को पसंद करो, बाकी सब बाद में।”</p>
-                <p className="mt-1 text-sm opacity-80">Love yourself first, the rest follows.</p>
-                <div className="mt-4 flex gap-2"><Button size="pill" className="bg-background text-foreground hover:bg-background/90" onClick={() => copyText("पहले खुद को पसंद करो, बाकी सब बाद में।")}><Copy /> Copy</Button><Button variant="story" size="pill" onClick={() => listen("daily", "पहले खुद को पसंद करो, बाकी सब बाद में।")}>{speakingId === "daily" ? <Pause /> : <Play />} Listen</Button></div>
-              </div>
-            </section>}
+            {tab === "home" && <PhotoCaption mode="prompt" language={language} category={category} onCopy={async (text, message) => { await navigator.clipboard.writeText(text); notify(message); }} onWhatsApp={(text) => window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer")} />}
 
             <section className={cn(tab === "home" ? "mt-6" : "mt-1")}>
               <div className="flex items-end justify-between gap-4">
@@ -279,7 +279,7 @@ function QuotelyApp() {
         <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 px-3 pt-2">
           <TabButton active={tab === "home"} label="Home" icon={<Home />} onClick={() => setActiveTab("home")} />
           <TabButton active={tab === "hashtags"} label="Hashtags" icon={<Hash />} onClick={() => setActiveTab("hashtags")} />
-          <TabButton active={tab === "ai"} label="AI Photo" icon={<ScanSearch />} onClick={() => setActiveTab("ai")} />
+          <TabButton active={tab === "ai"} label="Media AI" icon={<ScanSearch />} onClick={() => setActiveTab("ai")} />
           <TabButton active={tab === "fonts"} label="Fonts" icon={<Type />} onClick={() => setActiveTab("fonts")} />
           <TabButton active={tab === "saved"} label="Saved" icon={<Heart />} onClick={() => setActiveTab("saved")} />
           <TabButton active={tab === "create"} label="Create" icon={<WandSparkles />} onClick={() => setActiveTab("create")} />
